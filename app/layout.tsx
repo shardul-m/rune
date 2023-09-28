@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter, Courier_Prime } from 'next/font/google'
+import Providers from './providers'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,7 +43,7 @@ export default function RootLayout({
           backgroundAttachment: 'scroll',
         }}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
