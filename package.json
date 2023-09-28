@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^3.3.1",
     "@mempool/mempool.js": "^2.3.0",
     "@prisma/client": "^5.3.1",
+    "@tanstack/react-query": "^4.35.3",
     "@types/bull": "^4.10.0",
     "@types/express": "^4.17.18",
     "@types/node": "20.7.0",
