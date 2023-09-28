@@ -22,6 +22,7 @@
     "base26": "^0.1.0",
     "bitcoinjs-lib": "^6.1.5",
     "bullmq": "^4.11.4",
+    "clsx": "^2.0.0",
     "cors": "^2.8.5",
     "envalid": "^8.0.0",
     "eslint": "8.50.0",
@@ -34,6 +35,8 @@
     "react": "18.2.0",
     "react-data-table-component": "^7.5.4",
     "react-dom": "18.2.0",
+    "sats-connect": "^1.1.1",
+    "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "ts-node": "^10.9.1",
     "typescript": "5.2.2"
