@@ -1,13 +1,15 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import { MintForm } from '@/components/common/form-elements/forms/MintForm'
 
 import { useGetBtcToUsdExchangeRate } from '@/hooks/query/useGetBtcToUsdExchangeRate'
 import { useGetFeesData } from '@/hooks/query/useGetFeesData'
 import { useGetBalance } from '@/hooks/query/useGetBalance'
+import { useGetConnectedWalletInfo } from '@/hooks/query/useGetConnectedWalletInfo'
 
 import { satsToBitcoin } from '@/utils/satsToBitcoin'
-import { useEffect, useState } from 'react'
 
 export default function MintPage() {
   const [mounted, setMounted] = useState(false)
@@ -24,16 +26,21 @@ export default function MintPage() {
     address: 'bc1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqjwvw97', // Some random whale
   })
 
+  const { data: walletData } = useGetConnectedWalletInfo()
+
+  console.log(walletData)
+
   console.log({
     exchangeRateData,
     feesData,
     balanceData: balanceData ? satsToBitcoin(balanceData) : balanceData,
+    walletData,
   })
 
   if (!mounted) return null
 
   return (
-    <main className="w-full min-h-screen flex-wrap lg:flex-nowrap px-4 py-20 flex items-start justify-center gap-10">
+    <main className="w-full min-h-screen flex-wrap lg:flex-nowrap px-4 py-20 pt-32 flex items-start justify-center gap-10">
       <div className="w-full max-w-md flex flex-col gap-8 items-start justify-start text-primaryText order-2 lg:order-1">
         <div>
           <h1 className="font-bold text-4xl">Runes Deployer</h1>
