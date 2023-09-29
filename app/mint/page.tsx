@@ -4,24 +4,12 @@ import { useEffect, useState } from 'react'
 
 import { MintForm } from '@/components/common/form-elements/forms/MintForm'
 
-import { useGetBalance } from '@/hooks/query/useGetBalance'
-
-import { satsToBitcoin } from '@/utils/satsToBitcoin'
-
 export default function MintPage() {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  const { data: balanceData } = useGetBalance({
-    address: 'bc1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqjwvw97', // Some random whale
-  })
-
-  console.log({
-    balanceData: balanceData ? satsToBitcoin(balanceData) : balanceData,
-  })
 
   if (!mounted) return null
 
