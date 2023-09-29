@@ -9,7 +9,7 @@ export const mintSchema = z
       .refine((value) => isValidBitcoinAddress(value), {
         message: 'Invalid receiver address',
       }),
-    tokenSymbol: z.string().min(1).max(75),
+    tokenSymbol: z.string().min(1).max(75).regex(/[A-Z]/g),
     maxSupply: z.coerce.number().int().positive().default(0),
     decimals: z.coerce.number().int().positive().default(0),
     feeRate: z.string(),
