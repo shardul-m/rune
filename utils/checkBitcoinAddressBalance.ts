@@ -12,7 +12,7 @@ export async function checkBitcoinAddressBalance(address: string) {
       0
     )
 
-    return balance
+    return balance as number
   } catch (error) {
     console.error(`An error occurred: ${error}`)
     return null
