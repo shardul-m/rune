@@ -16,6 +16,7 @@ import FormInput from '../FormInput'
 import { MintSchemaType, mintSchema } from '../../schemas/MintSchema'
 
 import { cn } from '@/utils/cn'
+import { useCreateIssuance } from '@/hooks/mutation/useCreateIssuance'
 
 const defaultValues: MintSchemaType = {
   receiverAddress: '',
@@ -35,6 +36,8 @@ export function MintForm({ className }: { className?: string }) {
     )?.address,
   })
   const { mutate } = useConnectWallet()
+
+  const { mutate: createIssuance } = useCreateIssuance()
 
   const methods = useForm({
     defaultValues,
@@ -111,6 +114,18 @@ export function MintForm({ className }: { className?: string }) {
             )}
             )
           </p>
+          <button
+            type="button"
+            onClick={() => {
+              createIssuance({
+                address: walletData?.addresses?.find(
+                  (obj) => obj.purpose === AddressPurpose.Payment
+                )?.address!,
+              })
+            }}
+          >
+            Testing Issue
+          </button>
           {walletData?.addresses?.length ? (
             <button
               type="submit"
@@ -118,7 +133,7 @@ export function MintForm({ className }: { className?: string }) {
               className={cn(
                 'mt-2 border-2 border-black dark:border-white dark:text-white rounded py-2 px-5 font-bold text-lg duration-150 hover:shadow-md flex items-center justify-center gap-4',
                 'uppercase',
-                'disabled:opacity-50 cursor-not-allowed'
+                'disabled:opacity-50 disabled:cursor-not-allowed'
               )}
             >
               {!balanceData ? 'Insufficent UTXOs' : 'Deploy'}
