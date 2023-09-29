@@ -1,37 +1,27 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-
 import { MintForm } from '@/components/common/form-elements/forms/MintForm'
-import { checkBitcoinAddressBalance } from '@/utils/checkBitcoinAddressBalance'
+
+import { useGetBtcToUsdExchangeRate } from '@/hooks/query/useGetBtcToUsdExchangeRate'
+import { useGetFeesData } from '@/hooks/query/useGetFeesData'
+import { useGetBalance } from '@/hooks/query/useGetBalance'
+
 import { satsToBitcoin } from '@/utils/satsToBitcoin'
-import { btcToUsdExchangeRate } from '@/utils/btcToUsdExchangeRate'
-import { getFeesData } from '@/utils/getFeesData'
+import { useEffect, useState } from 'react'
 
 export default function MintPage() {
-  const { data: exchangeRateData } = useQuery({
-    queryKey: ['exchange-rate', 'bitcoin', 'usd'],
-    queryFn: async () => {
-      return btcToUsdExchangeRate()
-    },
-  })
+  const [mounted, setMounted] = useState(false)
 
-  const { data: feesData } = useQuery({
-    queryKey: ['fees-data'],
-    queryFn: async () => {
-      return getFeesData()
-    },
-    refetchInterval: 10_000,
-  })
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-  const { data: balanceData } = useQuery({
-    queryKey: ['balance'],
-    queryFn: async () => {
-      return checkBitcoinAddressBalance(
-        'bc1q8pstd959zlj59l24qxct3hkjrzpaza8m92vn6q' ??
-          'bc1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqjwvw97' // Some random whale
-      )
-    },
+  const { data: exchangeRateData } = useGetBtcToUsdExchangeRate()
+
+  const { data: feesData } = useGetFeesData()
+
+  const { data: balanceData } = useGetBalance({
+    address: 'bc1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqjwvw97', // Some random whale
   })
 
   console.log({
@@ -39,6 +29,8 @@ export default function MintPage() {
     feesData,
     balanceData: balanceData ? satsToBitcoin(balanceData) : balanceData,
   })
+
+  if (!mounted) return null
 
   return (
     <main className="w-full min-h-screen flex-wrap lg:flex-nowrap px-4 py-20 flex items-start justify-center gap-10">
