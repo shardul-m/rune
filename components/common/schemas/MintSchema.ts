@@ -4,11 +4,15 @@ import { isValidBitcoinAddress } from '@/utils/isValidBitcoinAddress'
 
 export const mintSchema = z
   .object({
-    receiverAddress: z.string().refine((value) => isValidBitcoinAddress(value)),
+    receiverAddress: z
+      .string({ invalid_type_error: 'Invalid receiver address' })
+      .refine((value) => isValidBitcoinAddress(value), {
+        message: 'Invalid receiver address',
+      }),
     tokenSymbol: z.string().min(1).max(75),
-    maxSupply: z.coerce.number().default(0),
-    decimals: z.coerce.number().default(0),
-    feeRate: z.number(),
+    maxSupply: z.coerce.number().int().positive().default(0),
+    decimals: z.coerce.number().int().positive().default(0),
+    feeRate: z.string(),
   })
   .strict()
 
