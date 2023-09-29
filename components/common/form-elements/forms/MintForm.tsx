@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { AddressPurpose } from 'sats-connect'
 import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -8,6 +9,7 @@ import { useConnectWallet } from '@/hooks/mutation/useConnectWallet'
 import { useGetBtcToUsdExchangeRate } from '@/hooks/query/useGetBtcToUsdExchangeRate'
 import { useGetConnectedWalletInfo } from '@/hooks/query/useGetConnectedWalletInfo'
 import { useGetFeesData } from '@/hooks/query/useGetFeesData'
+import { useGetBalance } from '@/hooks/query/useGetBalance'
 
 import FormInput from '../FormInput'
 
@@ -27,6 +29,11 @@ export function MintForm({ className }: { className?: string }) {
   const { data: feesData } = useGetFeesData()
   const { data: exchangeRateData } = useGetBtcToUsdExchangeRate()
   const { data: walletData } = useGetConnectedWalletInfo()
+  const { data: balanceData } = useGetBalance({
+    address: walletData?.addresses?.find(
+      (obj) => obj.purpose === AddressPurpose.Payment
+    )?.address,
+  })
   const { mutate } = useConnectWallet()
 
   const methods = useForm({
@@ -107,13 +114,14 @@ export function MintForm({ className }: { className?: string }) {
           {walletData?.addresses?.length ? (
             <button
               type="submit"
-              disabled={false}
+              disabled={!balanceData}
               className={cn(
                 'mt-2 border-2 border-black dark:border-white dark:text-white rounded py-2 px-5 font-bold text-lg duration-150 hover:shadow-md flex items-center justify-center gap-4',
-                'uppercase'
+                'uppercase',
+                'disabled:opacity-50 cursor-not-allowed'
               )}
             >
-              Deploy
+              {!balanceData ? 'Insufficent UTXOs' : 'Deploy'}
             </button>
           ) : (
             <button
