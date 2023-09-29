@@ -4,10 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { MintForm } from '@/components/common/form-elements/forms/MintForm'
 
-import { useGetBtcToUsdExchangeRate } from '@/hooks/query/useGetBtcToUsdExchangeRate'
-import { useGetFeesData } from '@/hooks/query/useGetFeesData'
 import { useGetBalance } from '@/hooks/query/useGetBalance'
-import { useGetConnectedWalletInfo } from '@/hooks/query/useGetConnectedWalletInfo'
 
 import { satsToBitcoin } from '@/utils/satsToBitcoin'
 
@@ -18,23 +15,12 @@ export default function MintPage() {
     setMounted(true)
   }, [])
 
-  const { data: exchangeRateData } = useGetBtcToUsdExchangeRate()
-
-  const { data: feesData } = useGetFeesData()
-
   const { data: balanceData } = useGetBalance({
     address: 'bc1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqjwvw97', // Some random whale
   })
 
-  const { data: walletData } = useGetConnectedWalletInfo()
-
-  console.log(walletData)
-
   console.log({
-    exchangeRateData,
-    feesData,
     balanceData: balanceData ? satsToBitcoin(balanceData) : balanceData,
-    walletData,
   })
 
   if (!mounted) return null
