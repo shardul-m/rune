@@ -29,7 +29,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
   }
 
   return (
-    <main className="flex container mx-auto flex-col items-center min-h-screen py-20">
+    <main className="flex container mx-auto flex-col items-center min-h-screen py-20 pt-32">
       <div>
         <h1 className="text-4xl mb-4 text-center font-bold">
           Search Transactions / Issuances
