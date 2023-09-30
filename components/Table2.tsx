@@ -1,26 +1,27 @@
-"use client";
-import { Transaction } from "@prisma/client";
-import axios from "axios";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import DataTable, { TableColumn } from "react-data-table-component";
+'use client'
+
+import { useEffect, useState } from 'react'
+import { Transaction } from '@prisma/client'
+import axios from 'axios'
+import Link from 'next/link'
+import DataTable, { TableColumn } from 'react-data-table-component'
 
 interface Transfer {
-  id: number;
-  amount: number;
-  output: number;
+  id: number
+  amount: number
+  output: number
 }
 
 function convertTransfersToTuple(transfers: Transfer[]) {
-  let allTransfers: any[] = [];
+  let allTransfers: any[] = []
 
-  transfers.forEach((t) => allTransfers.push([t.id, t.amount, t.output]));
-  return allTransfers;
+  transfers.forEach((t) => allTransfers.push([t.id, t.amount, t.output]))
+  return allTransfers
 }
 
 const cols: TableColumn<Transaction>[] = [
   {
-    name: "Transaction Hash",
+    name: <span className="font-bold text-base">Transaction Hash</span>,
     selector: (row: Transaction) => row.id,
     sortable: true,
     cell: (row) => (
@@ -35,34 +36,38 @@ const cols: TableColumn<Transaction>[] = [
   },
 
   {
-    name: "Transfers (id, amount, output)",
+    name: (
+      <span className="font-bold text-base">
+        Transfers (id, amount, output)
+      </span>
+    ),
     selector: (row: Transaction) =>
       JSON.stringify(convertTransfersToTuple(row.transfers as any)),
-    width: "200px",
+    width: '200px',
     sortable: true,
   },
   {
-    name: "Symbol",
+    name: <span className="font-bold text-base">Symbol</span>,
     selector: (row: Transaction) =>
-      (row.issuance as any)?.symbol ?? "missing symbol",
-    width: "100px",
+      (row.issuance as any)?.symbol ?? 'missing symbol',
+    width: '100px',
     sortable: true,
   },
   {
-    name: "Decimals",
+    name: <span className="font-bold text-base">Decimals</span>,
     selector: (row: Transaction) =>
-      (row.issuance as any)?.decimals ?? "missing decimals",
-    width: "100px",
+      (row.issuance as any)?.decimals ?? 'missing decimals',
+    width: '100px',
     sortable: true,
   },
   {
-    name: "Block Height",
+    name: <span className="font-bold text-base">Block Height</span>,
     selector: (row: Transaction) => row.blockHeight,
     sortable: true,
-    width: "140px",
+    width: '140px',
   },
   {
-    name: "Block id",
+    name: <span className="font-bold text-base">Block ID</span>,
     selector: (row: Transaction) => row.blockNumber,
     sortable: true,
     cell: (row) => (
@@ -75,50 +80,50 @@ const cols: TableColumn<Transaction>[] = [
     ),
   },
   {
-    name: "Block timestamp",
+    name: <span className="font-bold text-base">Block Timestamp</span>,
     selector: (row: Transaction) => row.blockTimestamp,
-    width: "150px",
+    width: '150px',
     sortable: true,
   },
-];
+]
 
-const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 const Table2 = () => {
-  const [error, setError] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [items, setItems] = useState([]);
-  const [totalRows, setTotalRows] = useState(0);
-  const [perPage, setPerPage] = useState(20);
+  const [error, setError] = useState<string | null>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [items, setItems] = useState([])
+  const [totalRows, setTotalRows] = useState(0)
+  const [perPage, setPerPage] = useState(20)
 
   useEffect(() => {
-    getTransactions(1, perPage);
-  }, [perPage]);
+    getTransactions(1, perPage)
+  }, [perPage])
 
   async function getTransactions(page: number, perPage: number) {
     try {
       const response = await axios.get(
         `${backendURL}/tx?page=${page}&perPage=${perPage}`
-      );
-      setIsLoaded(true);
-      setTotalRows(response.data.meta.total);
-      setItems(response.data.data);
-      return response.data;
+      )
+      setIsLoaded(true)
+      setTotalRows(response.data.meta.total)
+      setItems(response.data.data)
+      return response.data
     } catch (e) {
-      setError("Error getting data ...!");
+      setError('Error getting data ...!')
     }
   }
 
   const handlePageChange = (page: number) => {
-    getTransactions(page, perPage);
-  };
+    getTransactions(page, perPage)
+  }
 
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
-    setPerPage(newPerPage);
-  };
+    setPerPage(newPerPage)
+  }
 
-  if (error) return <h1>Something went wrong!</h1>;
-  if (!isLoaded) return <h1>Loading ...</h1>;
+  if (error) return <h1>Something went wrong!</h1>
+  if (!isLoaded) return <h1>Loading ...</h1>
 
   return (
     <DataTable
@@ -136,7 +141,7 @@ const Table2 = () => {
       paginationDefaultPage={1}
       paginationPerPage={20}
     />
-  );
-};
+  )
+}
 
-export default Table2;
+export default Table2
